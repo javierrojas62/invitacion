@@ -1,0 +1,55 @@
+/* Estilos CSS para el fondo de la página */
+body {
+    background: linear-gradient(to bottom right, #141651, #0a0c55);
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Estilos CSS para el contenedor de la invitación */
+  .invitation-container {
+    width: 400px;
+    margin: 100px auto;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    animation: openBook 3s ease-in-out forwards;
+  }
+  
+  /* Animación de apertura del libro */
+  @keyframes openBook {
+    0% {
+      transform: perspective(800px) rotateY(-120deg);
+    }
+    100% {
+      transform: perspective(800px) rotateY(0deg);
+    }
+  }
+  
+  /* Estilos CSS para el botón de la invitación */
+  .button {
+    background-color: #fff;
+    color: #ff9800;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  /* Estilos CSS para la imagen de la tarjeta */
+  .card-image {
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+  }
+  
+  /* Estilos CSS para dispositivos móviles */
+  @media only screen and (max-width: 600px) {
+    .invitation-container {
+      width: 90%;
+      margin: 50px auto;
+    }
+  }
+  
