@@ -232,7 +232,10 @@
     will-change:opacity, transform, filter;
     pointer-events:none;
   }
-  .panel-content a{ pointer-events:auto; }
+  /* pointer-events on each panel-content is toggled in JS: every panel sits
+     stacked at the same centered spot, so only the one actually on screen
+     (crossfade winner) may be interactive — otherwise an invisible neighbor's
+     link (e.g. the map button) can catch taps meant for whatever's on top. */
 
   .reduced-motion .spacer{ display:none; }
   .reduced-motion .stage{ position:static; padding:0; flex-direction:column; }
@@ -278,7 +281,7 @@
     align-items:center;
     gap:0.25rem;
     font-family:'Space Mono', monospace;
-    font-size:1.25rem;
+    font-size:1.55rem;
     letter-spacing:0.22em;
     text-transform:uppercase;
     color:var(--bone);
@@ -289,7 +292,7 @@
   }
   .scroll-hint.visible{ opacity:1; }
   .scroll-hint-arrow{
-    font-size:1.9rem;
+    font-size:2.4rem;
     color:var(--acid);
     text-shadow:0 0 14px rgba(198,255,61,0.7);
     animation:bob 1.3s ease-in-out infinite;
@@ -470,6 +473,7 @@
   var N = panels.length;
   var F = 0.16; // fraction of each section's range spent crossfading into/out of neighbors
   var auraMaxed = false;
+  var entered = false;
   var burstAuraFromRail = function(){}; // becomes real once the sparkle engine below initializes
 
   /* Pin the spacer to a fixed px height captured once, instead of a live vh unit.
@@ -480,7 +484,7 @@
      keeps the total scroll distance stable. */
   var lastWidth = window.innerWidth;
   function pinSpacerHeight(){
-    spacer.style.height = (window.innerHeight * 6.5) + 'px';
+    spacer.style.height = (window.innerHeight * 3.2) + 'px';
   }
   pinSpacerHeight();
 
@@ -511,6 +515,7 @@
     document.body.classList.remove('locked');
     auraRail.classList.add('visible');
     scrollHint.classList.add('visible');
+    entered = true;
     gate.removeEventListener('click', enter);
     gate.removeEventListener('touchend', enter);
     gate.removeEventListener('keydown', onKey);
@@ -553,6 +558,7 @@
         panel.style.opacity = visibility;
         panel.style.transform = 'translate(-50%, calc(-50% + ' + (28 * (1 - visibility)) + 'px))';
         panel.style.filter = 'blur(' + (6 * (1 - visibility)) + 'px)';
+        panel.style.pointerEvents = visibility > 0.5 ? 'auto' : 'none';
       });
     }
 
@@ -570,6 +576,8 @@
       auraMaxed = false;
       auraRail.classList.remove('maxed');
     }
+
+    if(entered){ scrollHint.classList.toggle('visible', pctInt < 100); }
   }
 
   window.addEventListener('scroll', function(){
