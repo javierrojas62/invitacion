@@ -37,7 +37,7 @@
 
   .eyebrow{
     font-family:'Space Mono', monospace;
-    font-size:1.15rem;
+    font-size:1.35rem;
     letter-spacing:0.22em;
     text-transform:uppercase;
     color:var(--acid);
@@ -98,7 +98,7 @@
   .aura-rail.visible{opacity:1;}
   .aura-pct{
     font-family:'Space Mono', monospace;
-    font-size:1.35rem;
+    font-size:1.6rem;
     font-weight:700;
     letter-spacing:0.04em;
     color:var(--bone);
@@ -107,8 +107,8 @@
   }
   .aura-track{
     position:relative;
-    width:9px;
-    height:min(48vh, 340px);
+    width:11px;
+    height:min(50vh, 380px);
     border-radius:999px;
     background:rgba(245,241,255,0.16);
     box-shadow:inset 0 0 6px rgba(0,0,0,0.4);
@@ -124,7 +124,7 @@
   }
   .aura-label{
     font-family:'Space Mono', monospace;
-    font-size:0.98rem;
+    font-size:1.1rem;
     letter-spacing:0.3em;
     text-transform:uppercase;
     color:var(--bone-dim);
@@ -167,40 +167,40 @@
   .gate.hidden{opacity:0; pointer-events:none;}
   .gate-eyebrow{
     font-family:'Space Mono', monospace;
-    font-size:clamp(0.95rem, 3.6vw, 1.2rem);
-    letter-spacing:0.18em;
+    font-size:clamp(1.1rem, 4.2vw, 1.4rem);
+    letter-spacing:0.16em;
     text-transform:uppercase;
     color:var(--spark);
-    margin-bottom:1.3rem;
+    margin-bottom:1.4rem;
     font-weight:700;
   }
   .gate-title{
-    font-size:clamp(3.4rem, 15vw, 6.2rem);
+    font-size:clamp(3.9rem, 17vw, 7.2rem);
     font-weight:900;
     line-height:0.98;
     color:var(--bone);
     text-shadow:0 0 26px rgba(198,255,61,0.35);
   }
   .gate-hint{
-    margin-top:1.5rem;
+    margin-top:1.6rem;
     font-family:'Space Mono', monospace;
-    font-size:clamp(1.05rem, 4vw, 1.3rem);
+    font-size:clamp(1.2rem, 4.6vw, 1.5rem);
     color:var(--bone-dim);
     letter-spacing:0.04em;
   }
   .gate-pulse{
-    margin-top:2.4rem;
-    width:84px; height:84px;
+    margin-top:2.6rem;
+    width:104px; height:104px;
     border-radius:50%;
-    border:2.5px solid var(--acid);
+    border:3px solid var(--acid);
     display:flex; align-items:center; justify-content:center;
     color:var(--acid);
-    font-size:2rem;
+    font-size:2.4rem;
     animation:pulse 1.8s ease-in-out infinite;
   }
   @keyframes pulse{
     0%,100%{ box-shadow:0 0 0 0 rgba(198,255,61,0.45); transform:scale(1); }
-    50%{ box-shadow:0 0 0 18px rgba(198,255,61,0); transform:scale(1.06); }
+    50%{ box-shadow:0 0 0 20px rgba(198,255,61,0); transform:scale(1.06); }
   }
 
   /* ---------- story sections ---------- */
@@ -261,34 +261,57 @@
   .tagline{
     font-family:'Unbounded', sans-serif;
     font-weight:700;
-    font-size:clamp(1.7rem, 6.8vw, 2.35rem);
+    font-size:clamp(1.95rem, 7.8vw, 2.7rem);
     color:var(--bone);
     margin-top:1rem;
   }
-  .scroll-cue{
-    margin-top:2.6rem;
+
+  /* persistent scroll hint — stays on screen the whole way through, not just the hero */
+  .scroll-hint{
+    position:fixed;
+    left:50%;
+    bottom:max(20px, env(safe-area-inset-bottom) + 14px);
+    transform:translateX(-50%);
+    z-index:20;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:0.25rem;
     font-family:'Space Mono', monospace;
-    font-size:1.05rem;
-    letter-spacing:0.18em;
+    font-size:1.1rem;
+    letter-spacing:0.22em;
     text-transform:uppercase;
-    color:var(--bone-dim);
-    animation:bob 2.2s ease-in-out infinite;
+    color:var(--bone);
+    text-shadow:0 2px 12px rgba(0,0,0,0.7);
+    opacity:0;
+    transition:opacity 0.5s ease;
+    pointer-events:none;
   }
-  @keyframes bob{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(8px);} }
+  .scroll-hint.visible{ opacity:1; }
+  .scroll-hint-arrow{
+    font-size:1.7rem;
+    color:var(--acid);
+    text-shadow:0 0 14px rgba(198,255,61,0.7);
+    animation:bob 1.3s ease-in-out infinite;
+  }
+  @keyframes bob{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(18px);} }
+  @media (prefers-reduced-motion: reduce){
+    .scroll-hint-arrow{ animation:none; }
+  }
 
   /* date */
   .big-date{
     font-family:'Unbounded', sans-serif;
     font-weight:900;
-    font-size:clamp(6rem, 38vw, 13rem);
+    font-size:clamp(6.8rem, 42vw, 14.5rem);
     line-height:0.9;
     color:var(--bone);
     font-variant-numeric:tabular-nums;
     text-shadow:0 0 40px rgba(110,59,255,0.55);
   }
   .panel-sub{
-    margin-top:1.2rem;
-    font-size:clamp(1.4rem, 5.4vw, 1.8rem);
+    margin-top:1.3rem;
+    font-size:clamp(1.6rem, 6vw, 2.05rem);
     color:var(--bone-dim);
     max-width:34ch;
     margin-left:auto; margin-right:auto;
@@ -296,7 +319,7 @@
 
   /* location */
   .loc-title{
-    font-size:clamp(2.7rem, 12vw, 4.5rem);
+    font-size:clamp(3.1rem, 13.5vw, 5.1rem);
     font-weight:800;
     color:var(--bone);
   }
@@ -304,14 +327,14 @@
     display:inline-flex;
     align-items:center;
     gap:0.5rem;
-    margin-top:2.1rem;
-    padding:1.4rem 2.4rem;
+    margin-top:2.2rem;
+    padding:1.55rem 2.7rem;
     border-radius:999px;
     background:var(--acid);
     color:var(--void);
     font-family:'Space Mono', monospace;
     font-weight:700;
-    font-size:1.25rem;
+    font-size:1.45rem;
     letter-spacing:0.06em;
     text-transform:uppercase;
     text-decoration:none;
@@ -324,7 +347,7 @@
   .req-title{
     font-family:'Unbounded', sans-serif;
     font-weight:900;
-    font-size:clamp(3.2rem, 16vw, 5.6rem);
+    font-size:clamp(3.6rem, 18vw, 6.4rem);
     color:var(--bone);
     line-height:1.02;
   }
@@ -338,14 +361,14 @@
   .close-title{
     font-family:'Unbounded', sans-serif;
     font-weight:900;
-    font-size:clamp(3rem, 12.5vw, 4.8rem);
+    font-size:clamp(3.4rem, 14vw, 5.5rem);
     color:var(--bone);
     line-height:1.02;
   }
   .close-cta{
-    margin-top:1.5rem;
+    margin-top:1.6rem;
     font-family:'Space Mono', monospace;
-    font-size:clamp(1.4rem, 5.2vw, 1.8rem);
+    font-size:clamp(1.6rem, 5.8vw, 2.05rem);
     letter-spacing:0.05em;
     color:var(--acid);
     text-transform:uppercase;
@@ -356,7 +379,7 @@
     padding-top:1.3rem;
     border-top:1px dashed rgba(245,241,255,0.3);
     font-family:'Space Mono', monospace;
-    font-size:1.02rem;
+    font-size:1.15rem;
     letter-spacing:0.16em;
     text-transform:uppercase;
     color:var(--bone-dim);
@@ -364,7 +387,7 @@
 
   @media (prefers-reduced-motion: reduce){
     .panel-content{ opacity:1; transform:none; filter:none; }
-    .gate-pulse, .scroll-cue{ animation:none; }
+    .gate-pulse{ animation:none; }
   }
 </style>
 
@@ -379,6 +402,11 @@
   <span class="aura-pct" id="auraPct">0%</span>
   <span class="aura-track"><span class="aura-fill" id="auraFill"></span></span>
   <span class="aura-label">AURA</span>
+</div>
+
+<div class="scroll-hint" id="scrollHint" aria-hidden="true">
+  <span>deslizá</span>
+  <span class="scroll-hint-arrow">↓</span>
 </div>
 
 <div class="gate" id="gate" role="button" tabindex="0" aria-label="Tocá para entrar a la invitación">
@@ -399,7 +427,6 @@
       <span>MARCOS</span>
     </div>
     <div class="tagline">vení a farmear aura</div>
-    <div class="scroll-cue">deslizá ↓</div>
   </div>
 
   <div class="panel-content" data-index="1">
@@ -437,6 +464,7 @@
   var auraRail = document.getElementById('auraRail');
   var auraFill = document.getElementById('auraFill');
   var auraPct = document.getElementById('auraPct');
+  var scrollHint = document.getElementById('scrollHint');
   var spacer = document.getElementById('spacer');
   var panels = Array.prototype.slice.call(document.querySelectorAll('.panel-content'));
   var N = panels.length;
@@ -459,7 +487,7 @@
   /* Shrink-to-fit for single, unbreakable words (names, the date) so a big
      clamp() that looks great on most phones never clips a longer word on a
      narrow one — measured against the real available width instead of guessed. */
-  var fitEls = Array.prototype.slice.call(document.querySelectorAll('.lineup span, .big-date'));
+  var fitEls = Array.prototype.slice.call(document.querySelectorAll('.lineup span, .big-date, .req-title, .loc-title, .close-title, .close-cta, .gate-title'));
   function fitToWidth(){
     fitEls.forEach(function(el){ el.style.fontSize = ''; });
     fitEls.forEach(function(el){
@@ -482,6 +510,7 @@
     gate.classList.add('hidden');
     document.body.classList.remove('locked');
     auraRail.classList.add('visible');
+    scrollHint.classList.add('visible');
     gate.removeEventListener('click', enter);
     gate.removeEventListener('touchend', enter);
     gate.removeEventListener('keydown', onKey);
