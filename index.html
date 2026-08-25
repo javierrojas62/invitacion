@@ -37,7 +37,7 @@
 
   .eyebrow{
     font-family:'Space Mono', monospace;
-    font-size:0.95rem;
+    font-size:1.15rem;
     letter-spacing:0.22em;
     text-transform:uppercase;
     color:var(--acid);
@@ -98,7 +98,7 @@
   .aura-rail.visible{opacity:1;}
   .aura-pct{
     font-family:'Space Mono', monospace;
-    font-size:1rem;
+    font-size:1.35rem;
     font-weight:700;
     letter-spacing:0.04em;
     color:var(--bone);
@@ -107,10 +107,10 @@
   }
   .aura-track{
     position:relative;
-    width:5px;
-    height:min(42vh, 280px);
+    width:9px;
+    height:min(48vh, 340px);
     border-radius:999px;
-    background:rgba(245,241,255,0.14);
+    background:rgba(245,241,255,0.16);
     box-shadow:inset 0 0 6px rgba(0,0,0,0.4);
     overflow:visible;
   }
@@ -120,11 +120,11 @@
     height:0%;
     border-radius:999px;
     background:linear-gradient(180deg, var(--acid), var(--flare));
-    box-shadow:0 0 10px rgba(198,255,61,0.55);
+    box-shadow:0 0 16px rgba(198,255,61,0.6);
   }
   .aura-label{
     font-family:'Space Mono', monospace;
-    font-size:0.78rem;
+    font-size:0.98rem;
     letter-spacing:0.3em;
     text-transform:uppercase;
     color:var(--bone-dim);
@@ -167,39 +167,40 @@
   .gate.hidden{opacity:0; pointer-events:none;}
   .gate-eyebrow{
     font-family:'Space Mono', monospace;
-    font-size:0.7rem;
-    letter-spacing:0.2em;
+    font-size:clamp(0.95rem, 3.6vw, 1.2rem);
+    letter-spacing:0.18em;
     text-transform:uppercase;
     color:var(--spark);
-    margin-bottom:1.1rem;
+    margin-bottom:1.3rem;
+    font-weight:700;
   }
   .gate-title{
-    font-size:clamp(2.9rem, 13vw, 5.2rem);
+    font-size:clamp(3.4rem, 15vw, 6.2rem);
     font-weight:900;
     line-height:0.98;
     color:var(--bone);
     text-shadow:0 0 26px rgba(198,255,61,0.35);
   }
   .gate-hint{
-    margin-top:1.4rem;
+    margin-top:1.5rem;
     font-family:'Space Mono', monospace;
-    font-size:1rem;
+    font-size:clamp(1.05rem, 4vw, 1.3rem);
     color:var(--bone-dim);
     letter-spacing:0.04em;
   }
   .gate-pulse{
-    margin-top:2.2rem;
-    width:52px; height:52px;
+    margin-top:2.4rem;
+    width:84px; height:84px;
     border-radius:50%;
-    border:1.5px solid var(--acid);
+    border:2.5px solid var(--acid);
     display:flex; align-items:center; justify-content:center;
     color:var(--acid);
-    font-size:1.1rem;
+    font-size:2rem;
     animation:pulse 1.8s ease-in-out infinite;
   }
   @keyframes pulse{
     0%,100%{ box-shadow:0 0 0 0 rgba(198,255,61,0.45); transform:scale(1); }
-    50%{ box-shadow:0 0 0 14px rgba(198,255,61,0); transform:scale(1.06); }
+    50%{ box-shadow:0 0 0 18px rgba(198,255,61,0); transform:scale(1.06); }
   }
 
   /* ---------- story sections ---------- */
@@ -221,7 +222,7 @@
     left:50%;
     top:50%;
     padding-left:max(6vw, env(safe-area-inset-left) + 16px);
-    padding-right:calc(max(6vw, env(safe-area-inset-right) + 16px) + 58px);
+    padding-right:calc(max(6vw, env(safe-area-inset-right) + 16px) + 66px);
     padding-top:max(4vh, env(safe-area-inset-top) + 12px);
     padding-bottom:max(4vh, env(safe-area-inset-bottom) + 12px);
     text-align:center;
@@ -254,20 +255,20 @@
     line-height:0.92;
     letter-spacing:-0.01em;
   }
-  .lineup span:nth-child(1){ font-size:clamp(3.4rem, 17vw, 7rem); color:var(--bone); }
-  .lineup span:nth-child(2){ font-size:clamp(3.4rem, 17vw, 7rem); color:var(--acid); text-shadow:0 0 30px rgba(198,255,61,0.4); }
-  .lineup span:nth-child(3){ font-size:clamp(3.4rem, 17vw, 7rem); color:var(--flare); text-shadow:0 0 30px rgba(255,46,154,0.4); }
+  .lineup span:nth-child(1){ font-size:clamp(4rem, 20vw, 8.4rem); color:var(--bone); }
+  .lineup span:nth-child(2){ font-size:clamp(4rem, 20vw, 8.4rem); color:var(--acid); text-shadow:0 0 30px rgba(198,255,61,0.4); }
+  .lineup span:nth-child(3){ font-size:clamp(4rem, 20vw, 8.4rem); color:var(--flare); text-shadow:0 0 30px rgba(255,46,154,0.4); }
   .tagline{
     font-family:'Unbounded', sans-serif;
     font-weight:700;
-    font-size:clamp(1.4rem, 5.6vw, 1.95rem);
+    font-size:clamp(1.7rem, 6.8vw, 2.35rem);
     color:var(--bone);
-    margin-top:0.9rem;
+    margin-top:1rem;
   }
   .scroll-cue{
     margin-top:2.6rem;
     font-family:'Space Mono', monospace;
-    font-size:0.9rem;
+    font-size:1.05rem;
     letter-spacing:0.18em;
     text-transform:uppercase;
     color:var(--bone-dim);
@@ -279,15 +280,15 @@
   .big-date{
     font-family:'Unbounded', sans-serif;
     font-weight:900;
-    font-size:clamp(5rem, 32vw, 11rem);
+    font-size:clamp(6rem, 38vw, 13rem);
     line-height:0.9;
     color:var(--bone);
     font-variant-numeric:tabular-nums;
     text-shadow:0 0 40px rgba(110,59,255,0.55);
   }
   .panel-sub{
-    margin-top:1.1rem;
-    font-size:clamp(1.2rem, 4.6vw, 1.5rem);
+    margin-top:1.2rem;
+    font-size:clamp(1.4rem, 5.4vw, 1.8rem);
     color:var(--bone-dim);
     max-width:34ch;
     margin-left:auto; margin-right:auto;
@@ -295,7 +296,7 @@
 
   /* location */
   .loc-title{
-    font-size:clamp(2.3rem, 10vw, 3.8rem);
+    font-size:clamp(2.7rem, 12vw, 4.5rem);
     font-weight:800;
     color:var(--bone);
   }
@@ -303,14 +304,14 @@
     display:inline-flex;
     align-items:center;
     gap:0.5rem;
-    margin-top:1.9rem;
-    padding:1.2rem 2.1rem;
+    margin-top:2.1rem;
+    padding:1.4rem 2.4rem;
     border-radius:999px;
     background:var(--acid);
     color:var(--void);
     font-family:'Space Mono', monospace;
     font-weight:700;
-    font-size:1.05rem;
+    font-size:1.25rem;
     letter-spacing:0.06em;
     text-transform:uppercase;
     text-decoration:none;
@@ -323,7 +324,7 @@
   .req-title{
     font-family:'Unbounded', sans-serif;
     font-weight:900;
-    font-size:clamp(2.7rem, 13vw, 4.6rem);
+    font-size:clamp(3.2rem, 16vw, 5.6rem);
     color:var(--bone);
     line-height:1.02;
   }
@@ -337,14 +338,14 @@
   .close-title{
     font-family:'Unbounded', sans-serif;
     font-weight:900;
-    font-size:clamp(2.5rem, 10.5vw, 4rem);
+    font-size:clamp(3rem, 12.5vw, 4.8rem);
     color:var(--bone);
-    line-height:1.03;
+    line-height:1.02;
   }
   .close-cta{
-    margin-top:1.4rem;
+    margin-top:1.5rem;
     font-family:'Space Mono', monospace;
-    font-size:clamp(1.2rem, 4.4vw, 1.5rem);
+    font-size:clamp(1.4rem, 5.2vw, 1.8rem);
     letter-spacing:0.05em;
     color:var(--acid);
     text-transform:uppercase;
@@ -355,7 +356,7 @@
     padding-top:1.3rem;
     border-top:1px dashed rgba(245,241,255,0.3);
     font-family:'Space Mono', monospace;
-    font-size:0.88rem;
+    font-size:1.02rem;
     letter-spacing:0.16em;
     text-transform:uppercase;
     color:var(--bone-dim);
@@ -455,6 +456,25 @@
   }
   pinSpacerHeight();
 
+  /* Shrink-to-fit for single, unbreakable words (names, the date) so a big
+     clamp() that looks great on most phones never clips a longer word on a
+     narrow one — measured against the real available width instead of guessed. */
+  var fitEls = Array.prototype.slice.call(document.querySelectorAll('.lineup span, .big-date'));
+  function fitToWidth(){
+    fitEls.forEach(function(el){ el.style.fontSize = ''; });
+    fitEls.forEach(function(el){
+      var available = el.clientWidth;
+      var natural = el.scrollWidth;
+      if(natural > available && available > 0){
+        var current = parseFloat(getComputedStyle(el).fontSize);
+        el.style.fontSize = (current * (available / natural) * 0.96) + 'px';
+      }
+    });
+  }
+  fitToWidth();
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(fitToWidth); }
+  setTimeout(fitToWidth, 400);
+
   document.body.classList.add('locked');
 
   function enter(){
@@ -530,6 +550,7 @@
     if(window.innerWidth !== lastWidth){
       lastWidth = window.innerWidth;
       pinSpacerHeight();
+      fitToWidth();
     }
     if(!ticking){ ticking = true; requestAnimationFrame(update); }
   });
