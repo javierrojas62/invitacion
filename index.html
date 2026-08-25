@@ -204,7 +204,6 @@
   }
 
   /* ---------- story sections ---------- */
-  .spacer{ height:650vh; position:relative; z-index:1; } /* JS pins this to a stable px value on load */
   .stage{
     position:fixed;
     inset:0;
@@ -237,7 +236,6 @@
      (crossfade winner) may be interactive — otherwise an invisible neighbor's
      link (e.g. the map button) can catch taps meant for whatever's on top. */
 
-  .reduced-motion .spacer{ display:none; }
   .reduced-motion .stage{ position:static; padding:0; flex-direction:column; }
   .reduced-motion .panel-content{
     position:relative; left:auto; top:auto;
@@ -419,8 +417,6 @@
   <div class="gate-pulse">▶</div>
 </div>
 
-<div class="spacer" id="spacer"></div>
-
 <div class="stage" id="stage">
   <div class="panel-content" data-index="0">
     <div class="eyebrow">Line-up del cumple</div>
@@ -468,25 +464,14 @@
   var auraFill = document.getElementById('auraFill');
   var auraPct = document.getElementById('auraPct');
   var scrollHint = document.getElementById('scrollHint');
-  var spacer = document.getElementById('spacer');
   var panels = Array.prototype.slice.call(document.querySelectorAll('.panel-content'));
   var N = panels.length;
-  var F = 0.16; // fraction of each section's range spent crossfading into/out of neighbors
+  var F = 0.16; // fraction of each stop's range spent crossfading into/out of neighbors
   var auraMaxed = false;
   var entered = false;
   var burstAuraFromRail = function(){}; // becomes real once the sparkle engine below initializes
 
-  /* Pin the spacer to a fixed px height captured once, instead of a live vh unit.
-     Mobile browsers resize the visual viewport as the address bar hides/shows while
-     scrolling; if the spacer's own height breathed with that, scrollHeight and scrollY
-     would shift against each other mid-gesture and the crossfade could flicker between
-     sections. Recomputing only on real width changes (not toolbar-driven height changes)
-     keeps the total scroll distance stable. */
   var lastWidth = window.innerWidth;
-  function pinSpacerHeight(){
-    spacer.style.height = (window.innerHeight * 3.2) + 'px';
-  }
-  pinSpacerHeight();
 
   /* Shrink-to-fit for single, unbreakable words (names, the date) so a big
      clamp() that looks great on most phones never clips a longer word on a
@@ -509,30 +494,18 @@
 
   document.body.classList.add('locked');
 
-  function enter(){
-    try{ video.muted = false; video.play(); }catch(e){}
-    gate.classList.add('hidden');
-    document.body.classList.remove('locked');
-    auraRail.classList.add('visible');
-    scrollHint.classList.add('visible');
-    entered = true;
-    gate.removeEventListener('click', enter);
-    gate.removeEventListener('touchend', enter);
-    gate.removeEventListener('keydown', onKey);
-    setTimeout(function(){ gate.style.display = 'none'; }, 800);
-    requestAnimationFrame(update);
-  }
-  function onKey(e){
-    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); enter(); }
-  }
-  gate.addEventListener('click', enter);
-  gate.addEventListener('touchend', enter, {passive:true});
-  gate.addEventListener('keydown', onKey);
+  /* ---------- discrete stop navigation ----------
+     Instead of the aura tracking raw scroll distance, the page has N fixed
+     "stops" (one per section). Any gesture — even a small one — advances
+     exactly one stop, with the crossfade and the aura number animating
+     smoothly between the two, so it always lands cleanly on a clean
+     multiple of 100/(N-1)% rather than drifting to arbitrary values. */
+  var currentStop = 0;
+  var locked = false;
+  var STOP_PCT = 100 / (N - 1);
 
   function panelVisibility(i, segmentF){
     var d = segmentF - i;
-    if(i === 0){ d = Math.max(d, F); }              // hero: never fade in, starts at full hold
-    if(i === N - 1){ d = Math.min(d, 1 - F); }       // closing: never fade out once reached
     var v;
     if(d < -F){ v = 0; }
     else if(d < F){ v = (d + F) / (2 * F); }
@@ -542,16 +515,8 @@
     return Math.max(0, Math.min(1, v));
   }
 
-  var ticking = false;
-  function update(){
-    ticking = false;
-    var vh = window.innerHeight;
-    var doc = document.documentElement;
-    var scrollable = doc.scrollHeight - vh;
-    var p = scrollable > 0 ? Math.max(0, Math.min(1, window.scrollY / scrollable)) : 0;
-
+  function renderAt(segmentF, pctValue){
     if(!reduced){
-      var segmentF = p * N;
       panels.forEach(function(panel){
         var i = parseInt(panel.dataset.index, 10);
         var visibility = panelVisibility(i, segmentF);
@@ -561,38 +526,144 @@
         panel.style.pointerEvents = visibility > 0.5 ? 'auto' : 'none';
       });
     }
-
-    var pctInt = Math.round(p * 100);
+    var pctInt = Math.round(pctValue);
     auraFill.style.height = pctInt + '%';
     auraPct.textContent = pctInt + '%';
+  }
 
-    if(pctInt >= 100){
-      if(!auraMaxed){
-        auraMaxed = true;
-        auraRail.classList.add('maxed');
-        burstAuraFromRail();
-      }
-    } else if(auraMaxed){
+  function landOnStop(stop){
+    currentStop = stop;
+    renderAt(stop + 0.5, stop * STOP_PCT);
+
+    var isLast = stop === N - 1;
+    if(isLast && !auraMaxed){
+      auraMaxed = true;
+      auraRail.classList.add('maxed');
+      burstAuraFromRail();
+    } else if(!isLast && auraMaxed){
       auraMaxed = false;
       auraRail.classList.remove('maxed');
     }
-
-    if(entered){ scrollHint.classList.toggle('visible', pctInt < 100); }
+    scrollHint.classList.toggle('visible', entered && !isLast);
   }
 
-  window.addEventListener('scroll', function(){
-    if(!ticking){ ticking = true; requestAnimationFrame(update); }
-  }, {passive:true});
+  function easeInOutCubic(t){
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  function animateTo(targetStop){
+    if(locked || targetStop === currentStop || targetStop < 0 || targetStop > N - 1){ return; }
+    locked = true;
+    var fromStop = currentStop;
+    var fromF = fromStop + 0.5, toF = targetStop + 0.5;
+    var fromPct = fromStop * STOP_PCT, toPct = targetStop * STOP_PCT;
+    var duration = reduced ? 1 : 650;
+    var startTime = null;
+
+    function frame(ts){
+      if(startTime === null){ startTime = ts; }
+      var t = Math.min((ts - startTime) / duration, 1);
+      var eased = easeInOutCubic(t);
+      renderAt(fromF + (toF - fromF) * eased, fromPct + (toPct - fromPct) * eased);
+      if(t < 1){
+        requestAnimationFrame(frame);
+      } else {
+        landOnStop(targetStop);
+        setTimeout(function(){ locked = false; }, 90);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function goNext(){ animateTo(currentStop + 1); }
+  function goPrev(){ animateTo(currentStop - 1); }
+
+  renderAt(0.5, 0); // initial paint, hidden behind the gate
+
+  function enter(){
+    try{ video.muted = false; video.play(); }catch(e){}
+    gate.classList.add('hidden');
+    auraRail.classList.add('visible');
+    entered = true;
+    scrollHint.classList.toggle('visible', currentStop < N - 1);
+    gate.removeEventListener('click', enter);
+    gate.removeEventListener('touchend', enter);
+    gate.removeEventListener('keydown', onKey);
+    setTimeout(function(){ gate.style.display = 'none'; }, 800);
+    if(reduced){ document.body.classList.remove('locked'); }
+  }
+  function onKey(e){
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); enter(); }
+  }
+  gate.addEventListener('click', enter);
+  gate.addEventListener('touchend', enter, {passive:true});
+  gate.addEventListener('keydown', onKey);
+
+  if(!reduced){
+    var WHEEL_THRESHOLD = 4;
+    window.addEventListener('wheel', function(e){
+      if(!entered){ return; }
+      e.preventDefault();
+      if(locked){ return; }
+      if(e.deltaY > WHEEL_THRESHOLD){ goNext(); }
+      else if(e.deltaY < -WHEEL_THRESHOLD){ goPrev(); }
+    }, {passive:false});
+
+    var touchStartY = null;
+    var touchTriggered = false;
+    var TOUCH_THRESHOLD = 12;
+    window.addEventListener('touchstart', function(e){
+      if(!entered){ return; }
+      var t = e.touches && e.touches[0];
+      if(t){ touchStartY = t.clientY; touchTriggered = false; }
+    }, {passive:true});
+    window.addEventListener('touchmove', function(e){
+      if(!entered || locked || touchTriggered || touchStartY === null){ return; }
+      var t = e.touches && e.touches[0];
+      if(!t){ return; }
+      var delta = touchStartY - t.clientY;
+      if(delta > TOUCH_THRESHOLD){ touchTriggered = true; goNext(); }
+      else if(delta < -TOUCH_THRESHOLD){ touchTriggered = true; goPrev(); }
+    }, {passive:true});
+    window.addEventListener('touchend', function(){ touchStartY = null; }, {passive:true});
+
+    window.addEventListener('keydown', function(e){
+      if(!entered || locked){ return; }
+      if(e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' '){ e.preventDefault(); goNext(); }
+      else if(e.key === 'ArrowUp' || e.key === 'PageUp'){ e.preventDefault(); goPrev(); }
+    });
+  } else {
+    /* reduced motion: no snap-nav, just a plain scrollable page — still drive
+       the aura meter off real scroll position so it isn't left frozen at 0. */
+    var rTicking = false;
+    function reducedUpdate(){
+      rTicking = false;
+      var vh = window.innerHeight;
+      var doc = document.documentElement;
+      var scrollable = doc.scrollHeight - vh;
+      var p = scrollable > 0 ? Math.max(0, Math.min(1, window.scrollY / scrollable)) : 0;
+      var pctInt = Math.round(p * 100);
+      auraFill.style.height = pctInt + '%';
+      auraPct.textContent = pctInt + '%';
+      if(pctInt >= 100){
+        if(!auraMaxed){ auraMaxed = true; auraRail.classList.add('maxed'); }
+      } else if(auraMaxed){
+        auraMaxed = false; auraRail.classList.remove('maxed');
+      }
+      scrollHint.classList.toggle('visible', entered && pctInt < 100);
+    }
+    window.addEventListener('scroll', function(){
+      if(!rTicking){ rTicking = true; requestAnimationFrame(reducedUpdate); }
+    }, {passive:true});
+    reducedUpdate();
+  }
+
   window.addEventListener('resize', function(){
     if(window.innerWidth !== lastWidth){
       lastWidth = window.innerWidth;
-      pinSpacerHeight();
       fitToWidth();
     }
-    if(!ticking){ ticking = true; requestAnimationFrame(update); }
   });
-
-  update();
 
   /* ---------- sparkle trail (follows the finger/cursor) ---------- */
   if(!reduced){
